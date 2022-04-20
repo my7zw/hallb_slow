@@ -1,0 +1,279 @@
+record(stringin, "epics_time_now") {
+  field(DESC,"current time")
+  field(INP, "@%F %T")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN, "1 second")
+}
+
+record(stringin,"caput_time_ChamHv"){
+  field(DESC,"epics fill time for ChamHv")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "t_reset_ChamHv PP NMS")
+  field(MPST,"Always")
+}
+
+record(stringin,"epics_time_ChamHv"){
+  field(DESC,"epics update time for ChamHv")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN,"Passive")
+  field(PINI,"1")
+  field(TSEL, "caput_time_ChamHv.TIME CP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+}
+
+record(seq,"t_reset_ChamHv") {
+  field(SCAN,"Passive")
+  field(DO1, "0") 
+  field(LNK1, "t_counter_ChamHv")
+}
+
+record(calc,"t_counter_ChamHv"){
+  field(SCAN,"1 second")  
+  field(INPA,"3600")	
+  field(CALC,"VAL>=A?0:VAL+1")  
+  field(LOLO,"-2")
+  field(LOW,"-1")
+  field(HIGH,"60")
+  field(HIHI,"120")
+  field(HHSV,"2")
+  field(HSV,"1")
+  field(LLSV,"2")
+  field(LSV,"1")
+}
+
+record(stringin,"caput_time_HodoHv"){
+  field(DESC,"epics fill time for HodoHv")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "t_reset_HodoHv PP NMS")
+  field(MPST,"Always")
+}
+
+record(stringin,"epics_time_HodoHv"){
+  field(DESC,"epics update time for HodoHv")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN,"Passive")
+  field(PINI,"1")
+  field(TSEL, "caput_time_HodoHv.TIME CP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+}
+
+record(seq,"t_reset_HodoHv") {
+  field(SCAN,"Passive")
+  field(DO1, "0") 
+  field(LNK1, "t_counter_HodoHv")
+}
+
+record(calc,"t_counter_HodoHv"){
+  field(SCAN,"1 second")  
+  field(INPA,"3600")	
+  field(CALC,"VAL>=A?0:VAL+1")  
+  field(LOLO,"-2")
+  field(LOW,"-1")
+  field(HIGH,"60")
+  field(HIHI,"120")
+  field(HHSV,"2")
+  field(HSV,"1")
+  field(LLSV,"2")
+  field(LSV,"1")
+}
+
+record(stringin,"caput_time_DPhodo"){
+  field(DESC,"epics fill time for DPhodo")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "t_reset_DPhodo PP NMS")
+  field(MPST,"Always")
+}
+
+record(stringin,"epics_time_DPhodo"){
+  field(DESC,"epics update time for DPhodo")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN,"Passive")
+  field(PINI,"1")
+  field(TSEL, "caput_time_DPhodo.TIME CP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+}
+
+record(seq,"t_reset_DPhodo") {
+  field(SCAN,"Passive")
+  field(DO1, "0") 
+  field(LNK1, "t_counter_DPhodo")
+}
+
+record(calc,"t_counter_DPhodo"){
+  field(SCAN,"1 second")  
+  field(INPA,"3600")	
+  field(CALC,"VAL>=A?0:VAL+1")  
+  field(LOLO,"-2")
+  field(LOW,"-1")
+  field(HIGH,"60")
+  field(HIHI,"120")
+  field(HHSV,"2")
+  field(HSV,"1")
+  field(LLSV,"2")
+  field(LSV,"1")
+}
+
+record(stringin,"caput_time_HallEnv"){
+  field(DESC,"epics fill time for HallEnv")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "t_reset_HallEnv PP NMS")
+  field(MPST,"Always")
+}
+
+record(stringin,"epics_time_HallEnv"){
+  field(DESC,"epics update time for HallEnv")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN,"Passive")
+  field(PINI,"1")
+  field(TSEL, "caput_time_HallEnv.TIME CP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+}
+
+record(seq,"t_reset_HallEnv") {
+  field(SCAN,"Passive")
+  field(DO1, "0") 
+  field(LNK1, "t_counter_HallEnv")
+}
+
+record(calc,"t_counter_HallEnv"){
+  field(SCAN,"1 second")  
+  field(INPA,"3600")	
+  field(CALC,"VAL>=A?0:VAL+1")  
+  field(LOLO,"-2")
+  field(LOW,"-1")
+  field(HIGH,"60")
+  field(HIHI,"120")
+  field(HHSV,"2")
+  field(HSV,"1")
+  field(LLSV,"2")
+  field(LSV,"1")
+}
+
+record(stringin,"caput_time_ScalerDAQ"){
+  field(DESC,"epics fill time for ScalerDAQ")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "t_reset_ScalerDAQ PP NMS")
+  field(MPST,"Always")
+}
+
+record(stringin,"epics_time_ScalerDAQ"){
+  field(DESC,"epics update time for ScalerDAQ")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN,"Passive")
+  field(PINI,"1")
+  field(TSEL, "caput_time_ScalerDAQ.TIME CP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+}
+
+record(seq,"t_reset_ScalerDAQ") {
+  field(SCAN,"Passive")
+  field(DO1, "0") 
+  field(LNK1, "t_counter_ScalerDAQ")
+}
+
+record(calc,"t_counter_ScalerDAQ"){
+  field(SCAN,"1 second")  
+  field(INPA,"3600")	
+  field(CALC,"VAL>=A?0:VAL+1")  
+  field(LOLO,"-2")
+  field(LOW,"-1")
+  field(HIGH,"60")
+  field(HIHI,"120")
+  field(HHSV,"2")
+  field(HSV,"1")
+  field(LLSV,"2")
+  field(LSV,"1")
+}
+
+record(stringin,"caput_time_BeamDAQ"){
+  field(DESC,"epics fill time for BeamDAQ")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "t_reset_BeamDAQ PP NMS")
+  field(MPST,"Always")
+}
+
+record(stringin,"epics_time_BeamDAQ"){
+  field(DESC,"epics update time for BeamDAQ")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN,"Passive")
+  field(PINI,"1")
+  field(TSEL, "caput_time_BeamDAQ.TIME CP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+}
+
+record(seq,"t_reset_BeamDAQ") {
+  field(SCAN,"Passive")
+  field(DO1, "0") 
+  field(LNK1, "t_counter_BeamDAQ")
+}
+
+record(calc,"t_counter_BeamDAQ"){
+  field(SCAN,"1 second")  
+  field(INPA,"3600")	
+  field(CALC,"VAL>=A?0:VAL+1")  
+  field(LOLO,"-2")
+  field(LOW,"-1")
+  field(HIGH,"60")
+  field(HIHI,"120")
+  field(HHSV,"2")
+  field(HSV,"1")
+  field(LLSV,"2")
+  field(LSV,"1")
+}
+
+record(stringin,"caput_time_TargetDAQ"){
+  field(DESC,"epics fill time for TargetDAQ")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "t_reset_TargetDAQ PP NMS")
+  field(MPST,"Always")
+}
+
+record(stringin,"epics_time_TargetDAQ"){
+  field(DESC,"epics update time for TargetDAQ")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN,"Passive")
+  field(PINI,"1")
+  field(TSEL, "caput_time_TargetDAQ.TIME CP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+}
+
+record(seq,"t_reset_TargetDAQ") {
+  field(SCAN,"Passive")
+  field(DO1, "0") 
+  field(LNK1, "t_counter_TargetDAQ")
+}
+
+record(calc,"t_counter_TargetDAQ"){
+  field(SCAN,"1 second")  
+  field(INPA,"3600")	
+  field(CALC,"VAL>=A?0:VAL+1")  
+  field(LOLO,"-2")
+  field(LOW,"-1")
+  field(HIGH,"60")
+  field(HIHI,"120")
+  field(HHSV,"2")
+  field(HSV,"1")
+  field(LLSV,"2")
+  field(LSV,"1")
+}

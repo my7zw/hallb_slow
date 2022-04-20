@@ -1,0 +1,33 @@
+import os
+
+v = Variables(None, ARGUMENTS)
+v.Add(BoolVariable('buildlib', 'Set to 1 to build lib', 0))
+
+epics_tdir = ['/data2/e1039/daq/slowcontrols/epics/epics_scripts/mtopd']
+#env = Environment(TOPDIR = os.environ['TOPDIR'], variables=v)
+env = Environment(TOPDIR = epics_tdir, variables=v)
+env.Append(EPICS_BASE = os.environ['EPICS_BASE'])
+env.Append(ENV = {'PATH':os.environ['PATH'], 'LD_LIBRARY_PATH':os.environ['LD_LIBRARY_PATH']})
+#env.Append(LIBS=['grupd'])
+env.Append(LIBS=['TreePlayer','Spectrum','ca','Com'])
+env.Append(LIBPATH=['$TOPDIR/lib','$EPICS_BASE/lib/linux-x86_64'])
+env.Append(CPPPATH=['$TOPDIR/include',
+                    '$EPICS_BASE/include/',
+                    '$EPICS_BASE/include/os/Linux/',
+                    '$EPICS_BASE/include/compiler/gcc'])
+env.Append(CCFLAGS = '-Wall -Wextra -O3 -m64 -static')
+env.ParseConfig("root-config --cflags --libs --glibs")
+
+Export('env')
+
+projdir = '$TOPDIR/build/' + os.path.basename(os.getcwd()) + '/'
+objs=[]
+for top, dirs, files in os.walk('.'):
+  for subdir in dirs:
+    sn = os.path.join(top, subdir,'scon_sub')
+    if os.path.exists(sn):
+     o = env.SConscript(sn, variant_dir=projdir+subdir, src_dir=subdir, duplicate=0)
+     objs.append(o)
+
+env.SConscript('scon_top', exports='objs', variant_dir=projdir, src_dir='.', duplicate=0)
+Help(v.GenerateHelpText(env))

@@ -1,0 +1,183 @@
+#simple counter; uses A,B instead of VAL
+record(calc,"wtime"){
+  field(DESC,"counter")
+  field(PINI,"1")
+  field(SCAN, "1 second")
+  field(VAL,"0")		
+  field(INPA,"wtime.VAL NPP")	
+  field(INPB,"1")
+  field(CALC,"A+B")
+}
+
+#internal epics time with soft timestamp
+record(stringin, "wtime:now") {
+  field(DESC,"current time")
+  field(INP, "@%F %T")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN, "1 second")
+}
+
+#access time of referenced record with soft timestamp
+record(stringin, "wtime:pv") {
+  field(DESC,"pv access time")
+  field(DTYP, "Soft Timestamp")
+  field(TSEL, "wtime_SpillData.TIME CPP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+}
+
+#----------------------------------------
+#when processed var causes flnk record be processed
+#PP,CP,etc should be irrelevant for flnk?
+#MDEL raises monitors when record processed even when VAL doesn't change
+record(ai,"var"){
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+ #field(MDEL,"-1")
+ #field(FLNK, "serst PP NMS")
+ #field(FLNK, "carst CP NMS")	
+ #field(FLNK, "carst")
+ field(FLNK, "borst")
+}
+
+#tried to use calc as a flag between var and cnt
+#this one doesn't make sense don't remember why
+record(calc,"carst"){
+  field(SCAN,"Passive")  
+  field(INPA,"carst")
+  field(INPB,"1")
+  field(INPC,"0")	  
+  field(CALC,"B;C:=C+VAL")
+ #field(MDEL,"-1")
+ #field(FLNK, "serst CP")
+}
+
+#tried to use bo as a flag between var and cnt
+#flag was supposed to be 1 for a second and then 0 again
+#cnt would detect 1 on one of the inp# and reset counter
+#but flnk borst in var does not cause it to preocess borst why?
+record(bo,"borst"){
+  field(DTYP, "Soft Channel")
+  field(SCAN,"Passive")
+ #field(PINI,"1")
+   field(PINI,"1")
+  field(VAL,"1")
+  field(HIGH,"2")
+  field(ZNAM,"0")
+  field(ONAM,"1")
+ #field(DOL,"carst")
+ #field(DOL,"1")
+ #field(OUT,"wtime:count.C PP")
+ #field(OMSL,"closed_loop")
+ #field(FLNK, "cnt.VAL")
+}
+
+#first tried to use LNK1,2 to write to cnt.A - worked saw cnt.A changes to 1and then 0
+#but for some reason calc field in cnt did not detect or ignored change
+#then tried to write to yet another record(airst) as intermediate flag and reference it
+#in cnt.A - that worked
+#then tried to write 0 directly to cnt.VAL feels fishy but works fine and with
+#less records and fields only need one LNK1' dont need to wait or do 1 then 0
+record(seq,"serst") {
+  field(SCAN,"Passive")
+ #field(SELM,"Mask") 
+ #field(SELL,"$(P)$(R):GENAMASK_SP")
+  field(DO1, "0") 
+ #field(DO2, "0") 
+  field(LNK1, "cnt")
+ #field(LNK1, "cnt.A")
+ #field(LNK2, "cnt.A")
+ #field(LNK1, "airst PP NMS")
+ #field(LNK2, "airst")
+  field(DLY1, "0.0")
+  #field(DLY2, "2.0")
+  #field(FLNK,"airst")
+}
+
+#used as intermediate flag since writing directly to cnt.A did not work (see above)
+#and it worked, what's the difference?
+record(ai,"airst"){
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+#  field(FLNK, "vABC")	
+}
+
+#had many versions with A being VAL and A+B as recommended but VAL+1 works just fine
+#big question (see above) when used serst to INP#, it did change value
+#but condition was ignored
+record(calc,"cnt"){
+  field(SCAN,"1 second")  
+  #field(INPA,"serst CP")
+  field(INPA,"borst")
+  field(INPB,"30")	
+ #field(CALC,"A?0:VAL+1")
+ #field(CALC,"VAL>=B?0:VAL+1")
+ field(CALC,"A=1?0:VAL+1")	
+}
+
+#testing if condition works because with seq it didn't
+#----------------------------
+record(ai,"vA"){
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+}
+record(ai,"vB"){
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+}
+record(ai,"vC"){
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+}
+record(calc,"vABC"){
+  field(SCAN,"1 second")  
+  field(INPA,"vABC")
+  field(INPB,"vA CPP MSS")
+  field(INPC,"vB CPP MSS")
+  field(INPD,"vC CPP MSS")
+  field(CALC,"C?0:VAL+1")
+}
+record(ai,"vdo"){
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "vABC")	
+}
+#-------------------------------------
+#did this to see difference between caput and epics times
+#the CP causes epics_time_ChamHv to process itself when caput_time_ChamHv processed
+#but if val of caput_time_ChamHv is unchanged .TIME will not be updated
+#ie monitors will not be raised
+#stringin does not have MDEL=-1 field to fix that instead
+#it has MPST/APST="Always" instead of default "On Change"
+#there is no documentation on that only found in tech-talk
+#https://epics.anl.gov/tech-talk/2011/msg00927.php
+record(stringin,"caput_time_ChamHv"){
+  field(DESC,"epics fill time for ChamHv")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(SCAN,"Passive")
+  field(INP,"")
+  field(FLNK, "t_reset_ChamHv PP NMS")
+  field(MPST,"Always")
+}
+
+record(stringin,"epics_time_ChamHv"){
+  field(DESC,"epics update time for ChamHv")
+  field(DTYP, "Soft Timestamp")
+  field(SCAN,"Passive")
+  field(PINI,"1")
+  field(TSEL, "caput_time_ChamHv.TIME CP")
+  field(INP, "@%Y_%m_%d %H:%M:%S")
+  field(MPST,"Always")
+}

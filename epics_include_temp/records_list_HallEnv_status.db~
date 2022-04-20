@@ -1,0 +1,15 @@
+record(ai,"HD1"){
+  field(DESC,"")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(EGU,"C")
+  field(INP,"")
+  field(HIHI,"")
+  field(HIGH,"")
+  field(LOLO,"")
+  field(LOW,"")
+  field(HHSV,"2")
+  field(HSV,"1")
+  field(LLSV,"2")
+  field(LSV,"1")
+}

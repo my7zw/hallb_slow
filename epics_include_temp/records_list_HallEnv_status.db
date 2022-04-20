@@ -1,0 +1,16 @@
+record(calc,"gT"){
+  field(DESC,"T group status")
+  field(DTYP,"Soft Channel")
+  field(PINI,"1")
+  field(INPA,"T1.stat")
+  field(INPB,"T2.stat")
+  field(INPC,"T3.stat")
+  field(INPD,"T4.stat")
+  field(INPE,"T5.stat")
+  field(INPF,"T6.stat")
+  field(INPG,"T7.stat")
+  field(INPH,"T8.stat")
+  field(INPI,"T9.stat")
+  field(INPJ,"T10.stat")
+  field(CALC,"A&&B&&C&&D&&F&&G&&H&&I&&J")
+}
